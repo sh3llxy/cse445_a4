@@ -20,12 +20,12 @@
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
-              <!-- remove Rating element -->
+              <!-- Rating is optional and must come after Address -->
+              <xs:element name="Rating" type="xs:decimal" minOccurs="0"/>
             </xs:sequence>
-            <!-- attributes on Hotel -->
+            <!-- required and optional attributes on Hotel -->
             <xs:attribute name="id" type="xs:string" use="required"/>
             <xs:attribute name="brand" type="xs:string" use="optional"/>
-            <xs:attribute name="Rating" type="xs:decimal" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
