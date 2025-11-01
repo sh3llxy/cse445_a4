@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Hotel> <!-- Wrong root name -->
+  <Hotel brand="Westin"> <!-- Missing required id attribute -->
+    <Name>Westin</Name>
+    <Phone>480-968-8885</Phone>
+    <Address>
+      <Number>11</Number>
+      <Street>E 7th St</Street>
+      <City>Tempe</City>
+      <State>AZ</State>
+      <Zip>85281</Zip>
+      <NearestAirport>Sky Harbor</NearestAirport>
+    </Address>
+    <Rating>4.2</Rating>
+  </Hotel>
+
+  <Hotel id="H2"> <!-- Missing one Phone element -->
+    <Name>Courtyard</Name>
+    <Address>
+      <Number>601</Number>
+      <Street>S Ash Ave</Street>
+      <City>Tempe</City>
+      <State>AZ</State>
+      <Zip>85281</Zip>
+      <NearestAirport>Sky Harbor</NearestAirport>
+    </Address>
+  </Hotel>
+
+  <Hotel id="H3" brand="Marriott">
+    <Name>Marriott</Name>
+    <Name>Downtown Marriott</Name> <!-- Two names for one hotel -->
+    <Phone>480-555-7890</Phone>
+    <Address>
+      <Number>200</Number>
+      <Street>W Washington St</Street>
+      <City>Phoenix</City>
+      <State>AZ</State>
+      <Zip>85003</Zip>
+      <NearestAirport>Sky Harbor</NearestAirport>
+    <!-- Missing closing tag for Address -->
+    <Rating>4.5</Rating>
+  </Hotel>
+</Hotel>
