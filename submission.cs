@@ -155,7 +155,8 @@ namespace ConsoleApp1
                 }
             };
 
-            string jsonText = root.ToString(Formatting.None);
+            string jsonText = root.ToString(Newtonsoft.Json.Formatting.None);
+
 
             // must be de-serializable by Newtonsoft.Json back into XML
             // if this throws, we bubble an exception to help debugging locally
