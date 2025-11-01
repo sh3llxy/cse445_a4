@@ -20,9 +20,9 @@ namespace ConsoleApp1
 
     public class Program
     {
-        public static string xmlURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xml";
-        public static string xmlErrorURL = "Your Error XML URL";
-        public static string xsdURL = "Your XSD URL";
+    public static string xmlURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xml";
+    public static string xmlErrorURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/HotelsErrors.xml";
+    public static string xsdURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xsd";
 
         public static void Main(string[] args)
         {
@@ -85,7 +85,7 @@ namespace ConsoleApp1
             XmlDocument doc = new XmlDocument();
             doc.Load(xmlUrl);
 
-            // build Hotels --> Hotel[] structure
+            // build Hotels → Hotel[] structure
             JArray hotelArray = new JArray();
             XmlNodeList hotels = doc.SelectNodes("/Hotels/Hotel");
 
