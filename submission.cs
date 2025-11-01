@@ -137,11 +137,12 @@ namespace ConsoleApp1
                     }
 
                     // Optional Rating → appears as "_Rating" only if present
-                    var rating = h.SelectSingleNode("Rating")?.InnerText?.Trim();
-                    if (!string.IsNullOrEmpty(rating))
+                    var ratingAttr = h.Attributes?["Rating"]?.Value?.Trim();
+                    if (!string.IsNullOrEmpty(ratingAttr))
                     {
-                        jHotel["_Rating"] = rating;
+                        jHotel["_Rating"] = ratingAttr;
                     }
+
 
                     hotelArray.Add(jHotel);
                 }
