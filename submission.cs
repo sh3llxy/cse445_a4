@@ -76,7 +76,7 @@ namespace ConsoleApp1
                 errors.AppendLine($"Exception: {ex.Message}");
             }
 
-            return errors.Length == 0 ? "No errors are found" : errors.ToString().Trim();
+            return errors.Length == 0 ? "No Error" : errors.ToString().Trim();
         }
 
         public static string Xml2Json(string xmlUrl)
