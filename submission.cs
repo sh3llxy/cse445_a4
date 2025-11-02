@@ -2,10 +2,7 @@
 using System.Xml.Schema;
 using System.Xml;
 using Newtonsoft.Json;
-using System.IO;
 using Newtonsoft.Json.Linq;
-
-
 
 /**
  * This template file is created for ASU CSE445 Distributed SW Dev Assignment 4.
@@ -13,26 +10,21 @@ using Newtonsoft.Json.Linq;
  * Uploading this file directly will not pass the autograder's compilation check, resulting in a grade of 0.
  * **/
 
-
 namespace ConsoleApp1
 {
-
-
     public class Program
     {
-    public static string xmlURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xml";
-    public static string xmlErrorURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/HotelsErrors.xml";
-    public static string xsdURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xsd";
+        public static string xmlURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xml";
+        public static string xmlErrorURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/HotelsErrors.xml";
+        public static string xsdURL = "https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xsd";
 
         public static void Main(string[] args)
         {
             string result = Verification(xmlURL, xsdURL);
             Console.WriteLine(result);
 
-
             result = Verification(xmlErrorURL, xsdURL);
             Console.WriteLine(result);
-
 
             result = Xml2Json(xmlURL);
             Console.WriteLine(result);
@@ -48,23 +40,24 @@ namespace ConsoleApp1
                 XmlSchemaSet schemas = new XmlSchemaSet();
                 schemas.Add(null, xsdUrl);
 
-                XmlReaderSettings settings = new XmlReaderSettings();
-                settings.ValidationType = ValidationType.Schema;
-                settings.Schemas = schemas;
-                settings.ValidationFlags =
-                    XmlSchemaValidationFlags.ReportValidationWarnings |
-                    XmlSchemaValidationFlags.ProcessInlineSchema |
-                    XmlSchemaValidationFlags.ProcessSchemaLocation;
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    ValidationType = ValidationType.Schema,
+                    Schemas = schemas,
+                    ValidationFlags =
+                        XmlSchemaValidationFlags.ReportValidationWarnings |
+                        XmlSchemaValidationFlags.ProcessInlineSchema |
+                        XmlSchemaValidationFlags.ProcessSchemaLocation
+                };
 
                 settings.ValidationEventHandler += (object sender, ValidationEventArgs e) =>
                 {
-                    // collect all errors and warnings
                     errors.AppendLine($"{e.Severity}: {e.Message}");
                 };
 
                 using (XmlReader reader = XmlReader.Create(xmlUrl, settings))
                 {
-                    while (reader.Read()) { /* force full validation */ }
+                    while (reader.Read()) { }
                 }
             }
             catch (XmlException xe)
@@ -81,11 +74,9 @@ namespace ConsoleApp1
 
         public static string Xml2Json(string xmlUrl)
         {
-            // load XML
             XmlDocument doc = new XmlDocument();
             doc.Load(xmlUrl);
 
-            // build Hotels → Hotel[] structure
             JArray hotelArray = new JArray();
             XmlNodeList hotels = doc.SelectNodes("/Hotels/Hotel");
 
@@ -97,8 +88,7 @@ namespace ConsoleApp1
 
                     // Name
                     var name = h.SelectSingleNode("Name")?.InnerText?.Trim();
-                    if (!string.IsNullOrEmpty(name))
-                        jHotel["Name"] = name;
+                    if (!string.IsNullOrEmpty(name)) jHotel["Name"] = name;
 
                     // Phone (one or more)
                     var phoneNodes = h.SelectNodes("Phone");
@@ -108,41 +98,39 @@ namespace ConsoleApp1
                         foreach (XmlNode p in phoneNodes)
                         {
                             var pv = p.InnerText?.Trim();
-                            if (!string.IsNullOrEmpty(pv))
-                                phones.Add(pv);
+                            if (!string.IsNullOrEmpty(pv)) phones.Add(pv);
                         }
                         jHotel["Phone"] = phones;
                     }
 
-                    // Address object
-                    var addr = h.SelectSingleNode("Address");
-                    if (addr != null)
+                    // Address with NearestAirport as attribute
+                    var addrElem = h.SelectSingleNode("Address") as XmlElement;
+                    if (addrElem != null)
                     {
                         JObject jAddr = new JObject();
-                        string number = addr.SelectSingleNode("Number")?.InnerText?.Trim();
-                        string street = addr.SelectSingleNode("Street")?.InnerText?.Trim();
-                        string city = addr.SelectSingleNode("City")?.InnerText?.Trim();
-                        string state = addr.SelectSingleNode("State")?.InnerText?.Trim();
-                        string zip = addr.SelectSingleNode("Zip")?.InnerText?.Trim();
-                        string airport = addr.SelectSingleNode("NearestAirport")?.InnerText?.Trim();
+                        string number = addrElem.SelectSingleNode("Number")?.InnerText?.Trim();
+                        string street = addrElem.SelectSingleNode("Street")?.InnerText?.Trim();
+                        string city = addrElem.SelectSingleNode("City")?.InnerText?.Trim();
+                        string state = addrElem.SelectSingleNode("State")?.InnerText?.Trim();
+                        string zip = addrElem.SelectSingleNode("Zip")?.InnerText?.Trim();
+                        string airport = addrElem.GetAttribute("NearestAirport")?.Trim();
 
                         if (!string.IsNullOrEmpty(number)) jAddr["Number"] = number;
                         if (!string.IsNullOrEmpty(street)) jAddr["Street"] = street;
                         if (!string.IsNullOrEmpty(city)) jAddr["City"] = city;
                         if (!string.IsNullOrEmpty(state)) jAddr["State"] = state;
                         if (!string.IsNullOrEmpty(zip)) jAddr["Zip"] = zip;
-                        if (!string.IsNullOrEmpty(airport)) jAddr["NearestAirport"] = airport;
+                        if (!string.IsNullOrWhiteSpace(airport)) jAddr["NearestAirport"] = airport;
 
                         jHotel["Address"] = jAddr;
                     }
 
-                    // Optional Rating → appears as "_Rating" only if present
-                    var ratingAttr = h.Attributes?["Rating"]?.Value?.Trim();
-                    if (!string.IsNullOrEmpty(ratingAttr))
+                    // Optional Rating as attribute on Hotel
+                    var ratingAttr = (h as XmlElement)?.GetAttribute("Rating");
+                    if (!string.IsNullOrWhiteSpace(ratingAttr))
                     {
                         jHotel["_Rating"] = ratingAttr;
                     }
-
 
                     hotelArray.Add(jHotel);
                 }
@@ -158,14 +146,10 @@ namespace ConsoleApp1
 
             string jsonText = root.ToString(Newtonsoft.Json.Formatting.None);
 
-
-            // must be de-serializable by Newtonsoft.Json back into XML
-            // if this throws, we bubble an exception to help debugging locally
+            // validate that JSON can be deserialized back into XML
             JsonConvert.DeserializeXmlNode(jsonText);
 
             return jsonText;
         }
-
     }
-
 }
