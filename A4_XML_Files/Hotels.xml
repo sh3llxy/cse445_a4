@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Hotels>
+<Hotels
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://sh3llxy.github.io/cse445_a4/A4_XML_Files/Hotels.xsd">
   <Hotel id="H1" brand="Westin">
     <Name>Westin</Name>
     <Phone>480-968-8885</Phone>
